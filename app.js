@@ -12,6 +12,14 @@ app
     // 3.2 使用中间件
     .use(bodyParser.urlencoded({ extended:false }))
     .use(serveFavicon(path.join(__dirname, 'resource', 'favicon.ico')))
+    
+    // 3.3托管静态资源
+    .use('/node_modules',express.static('node_modules'))
+    .use('/resource',express.static('resource'))
+
+    // 3.4 使用路由
+    .use(require('./router/heroRouter.js'))
+    
     .use((req,res)=>{
         console.log("1111");
         console.log(req.body);
