@@ -74,6 +74,7 @@
                 <div class="col-sm-10">
                   <input type="file" name="icon" class="form-control" id="icon" placeholder="技能">
                   <img class="pre-img" src="" id="iconImg" alt="" width="72px" height="72px">
+                  <a href="" id="download" download="头像.png">右键下载图片</a>
                 </div>
               </div>
 
@@ -88,6 +89,66 @@
       </div>
     </div>
   </div>
+
+  <script>
+    $(function(){
+      let heroArr = window.name.split("|");
+      $("#_id").val(heroArr[0]);
+      $("#name").val(heroArr[1]);
+      $("#skill").val(heroArr[2]);
+      $("#iconImg").attr("src",heroArr[3]);
+      // console.log(heroArr);
+
+      // 1.使用fileRead实现文件预览 + 文件大小 + 文件尺寸
+      // (1)给input标签注册onchange事件
+      $("#iconImg").on("change",function(){
+        // (2)创建FileReader对象
+        let reader = new FileReader();
+        // (3)开始读取:异步
+        // console.log(this.files);
+        reader.readAsDataURL(this.files[0]);
+        reader.addEventListener("load",function(){
+          $("#iconImg").attr("src",reader.result);
+          // console.log($("#img").width(),$("#img").height()); // 文件宽高
+          /* 文件大小问题
+              1.二进制数据在转成base之后 文件会增加 大约25%
+              2.真实大小 = base64大小 / 1024 * 0.75
+          */
+          // console.log(reader.result.length/1024 * 0.75); // 文件大小
+
+          /* a标签离线下载:用的是伪协议
+            以前学过的 JavaScript:void(0);阻止默认跳转
+            data:images/png,base64,数据
+            data:text/plain,你想要下载的文本
+          */
+          $("#download").attr('href',reader.result);
+        })
+      });      
+
+      $("#form").on("submit",function(e){
+        e.preventDefault();
+        let fm = new FormData($("#form")[0]);
+        $.ajax({
+          url:"/heroUpdate",
+          type:"post",
+          dataType:"json",
+          contentType:false,
+          processData:false,
+          data:fm,
+          success:function(data){
+            // console.log(data);
+            if(data.err_code==0){
+              location.href = "/";
+            }else{
+              alert(data.err_msg);
+            }
+          }
+        })
+      })
+    })
+
+
+  </script>
 </body>
 
 </html>

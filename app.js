@@ -7,10 +7,12 @@ let app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
 var serveFavicon = require('serve-favicon');
+var fileUpload = require('express-fileupload');
 
 app
     // 3.2 使用中间件
     .use(bodyParser.urlencoded({ extended:false }))
+    .use(fileUpload())
     .use(serveFavicon(path.join(__dirname, 'resource', 'favicon.ico')))
     
     // 3.3托管静态资源
@@ -20,10 +22,10 @@ app
     // 3.4 使用路由
     .use(require('./router/heroRouter.js'))
     
+    // 兜底函数
     .use((req,res)=>{
-        console.log("1111");
         console.log(req.body);
-        res.send("11");
+        res.send("404 not found");
     })
     // 4.开启服务器
     .listen(3000,()=>{

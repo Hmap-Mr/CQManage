@@ -98,8 +98,8 @@
                       <td>{{ value.heroSkill }}</td>
                       <td><img src="{{ value.heroIcon }}" width="72px" height="72px"></td>
                       <td class="manager">
-                          <button class="btn btn-success" onclick="" >编辑🐷</button>
-                        <button class="btn btn-danger" onclick="">删除👍</button>
+                          <button class="btn btn-success" onclick="window.name = '{{value._id}}|{{ value.heroName }}|{{ value.heroSkill }}|{{ value.heroIcon }}',location.href = '/resource/view/update.html'" >编辑🐷</button>
+                        <button class="btn btn-danger" onclick="location.href = '/heroDelete?_id={{value._id}}'">删除👍</button>
                       </td>
                     </tr>
                   {{ /each }}
@@ -114,16 +114,53 @@
 
   <script>
       $(function(){
+          // 1.页面加载 渲染第一页数据
           $.ajax({
             type:"get",
             url:"/heroList",
             dataType:"json",
             success:function(obj){
-              console.log(obj);
+              // console.log(obj);
               $("#heroListBody").html(template('heroListTmp',obj));
               $("#page").html(template('pageTmp',obj));
+
+              // 2.页码点击 请求渲染对应页码数据
+              $(".page").on("click",function(){
+                $.ajax({
+                  url:"/heroPage?page=" + $(this).text(),
+                  type:"get",
+                  dataType:"json",
+                  success:function(data){
+                    // console.log(data);
+                    $("#heroListBody").html(template('heroListTmp',data));
+                  }
+                })
+              });
             }
           });
+          
+          var isGetData = true;
+          $("#searchBtn").on("click",function(){
+            if($("#search").val().trim().length == 0){
+              return false;
+            }
+            if(isGetData) isGetData = false
+            else return false;
+            $.ajax({
+              url:"/heroSearch?searchTxt=" + $("#search").val(),
+              type:"get",
+              dataType:"json",
+              success:function(data){
+                console.log(data);
+                $("#heroListBody").html(template('heroListTmp',data));
+                $("#page").html(template('pageTmp',data));
+                $("#search").val('');
+                isGetData = true;
+              }
+            })
+          })
+
+
       })
   </script>
 </body>
