@@ -73,6 +73,33 @@
     </div>
   </div>
 
+  <script>
+    // $("#passWord").on("change",function(){
+    //   $(this).
+    // });
+    $("#form").on("submit",function(e){
+      e.preventDefault();
+
+      let str = md5($('#passWord').val(),$("#userName").val())
+      console.log(str);
+      $("#passWord").val(md5($('#passWord').val(),$("#userName").val()));
+
+      $.ajax({
+        type:"post",
+        url:"/register",
+        dataType:"json",
+        data:$(this).serialize(),
+        success:function(data){
+          if(data.err_code != 0){
+            alert(data.err_msg);
+          }else {
+            alert("注册成功!")
+            location.href = '/resource/view/login.html';
+          }
+        }
+      });
+    })
+  </script>
 </body>
 
 </html>

@@ -13,7 +13,11 @@
   <script src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
   <!-- 导入art-template -->
   <script src="/node_modules/art-template/lib/template-web.js"></script>
-
+  <style>
+    .ul_btn{
+      padding: 10px 0;
+    }
+  </style>
 </head>
 
 <body>
@@ -28,7 +32,7 @@
         </div>
         <!-- 用户登录信息 -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-          <ul class="nav navbar-nav navbar-right">
+          <ul class="nav navbar-nav navbar-right ul_btn">
             <li><a href="#" id="userName">张三</a></li>
             <li><button class="btn btn-danger btn-exit" id="logout" onclick="location.href='/logout'">退出</button></li>
             <li><button class="btn btn-success" id="login" onclick="location.href='/resource/view/login.html'">请登录</button></li>
@@ -123,6 +127,14 @@
               // console.log(obj);
               $("#heroListBody").html(template('heroListTmp',obj));
               $("#page").html(template('pageTmp',obj));
+              if(obj.user){
+                $("#userName").text(obj.user.userName);
+                $("#login").hide();
+              }else{
+                $("#userName").hide();
+                $("#logout").hide();
+                $(".manager").hide();
+              }
 
               // 2.页码点击 请求渲染对应页码数据
               $(".page").on("click",function(){

@@ -2,6 +2,7 @@ const path = require('path');
 // 导入Model
 const heroModel = require('../model/heroModel.js');
 
+// 导出方法
 module.exports = {
     showHeroList:(req,res)=>{
         //展示首页html
@@ -23,6 +24,7 @@ module.exports = {
                 res.json({
                     heros:docs.slice(0,10),
                     pageCount:pageCount,
+                    user:req.session.user
                 });
             };
         });

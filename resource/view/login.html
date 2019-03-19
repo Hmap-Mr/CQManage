@@ -66,6 +66,27 @@
       </div>
     </div>
   </div>
+
+  <script>
+      $("#form").on("submit",function(e){
+        e.preventDefault();
+        $("#passWord").val(md5($('#passWord').val(),$("#userName").val()));
+        $.ajax({
+          type:"post",
+          url:"/login",
+          dataType:"json",
+          data:$(this).serialize(),
+          success:function(data){
+            if(data.err_code==0){
+              location.href = "/";
+            }else{
+              alert(data.err_msg);
+            }
+          }
+        });
+      })
+      
+  </script>
 </body>
 
 </html>
